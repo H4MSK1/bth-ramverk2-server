@@ -21,3 +21,15 @@ export const compareHash = async (
     return false;
   }
 };
+
+export const omit = (entity: any, omitKeys: string | string[]) => {
+  const keys = Array.isArray(omitKeys) ? omitKeys : [omitKeys];
+
+  if (entity) {
+    for (const key in keys) {
+      key in entity && delete entity[key];
+    }
+  }
+
+  return entity;
+};
