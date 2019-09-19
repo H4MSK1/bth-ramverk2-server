@@ -10,11 +10,20 @@ export class ReportsService {
     private readonly repository: Repository<Report>,
   ) {}
 
-  async findAll(): Promise<Report[]> {
+  findAll(): Promise<Report[]> {
     return this.repository.find();
   }
 
-  async findOne(kmom: number): Promise<any> {
-    return this.repository.findOne({ where: { kmom } });
+  findOne(week: number): Promise<any> {
+    return this.repository.findOne({ where: { week } });
+  }
+
+  create(params): Promise<Report> {
+    const report = new Report();
+    report.authorId = params.authorId;
+    report.content = params.content;
+    report.week = params.week;
+
+    return this.repository.save(report);
   }
 }
