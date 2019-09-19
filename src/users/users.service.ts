@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
-import { createHashFromString } from '../utils';
+import { createHashFromString, omit } from '../utils';
 
 @Injectable()
 export class UsersService {
@@ -12,11 +12,22 @@ export class UsersService {
   ) {}
 
   async findAll(): Promise<User[]> {
-    return this.repository.find();
+    const result: User[] = await this.repository.find();
+    return result.map(user => omit(user, 'password'));
   }
 
-  async findOne(email: string): Promise<any> {
-    return this.repository.findOne({ where: { email } });
+  async findByID(id: any): Promise<User> {
+    const result: User = await this.repository.findOne({ where: { id } });
+    return omit(result, 'password');
+  }
+
+  async findOneByEmail(email: string): Promise<User> {
+    const result: User = await this.repository.findOne({ where: { email } });
+    return omit(result, 'password');
+  }
+
+  async findOneByEmailWithPassword(email: string): Promise<User> {
+    return await this.repository.findOne({ where: { email } });
   }
 
   async create(params): Promise<any> {
@@ -28,6 +39,6 @@ export class UsersService {
     user.password = await createHashFromString(password);
     user.birthDate = birthDate;
 
-    return await this.repository.save(user);
+    return this.repository.save(user);
   }
 }
