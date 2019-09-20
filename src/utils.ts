@@ -22,14 +22,18 @@ export const compareHash = async (
   }
 };
 
-export const omit = (entity: any, omitKeys: string | string[]) => {
-  const keys = Array.isArray(omitKeys) ? omitKeys : [omitKeys];
+export const omit = (obj: any, omitKeys: string | string[]) => {
+  const keys: string[] = Array.isArray(omitKeys) ? omitKeys : [omitKeys];
+  let result: any;
 
-  if (entity) {
-    for (const key in keys) {
+  if (obj) {
+    const entity = { ...obj };
+    for (const key of keys) {
       key in entity && delete entity[key];
     }
+
+    result = entity;
   }
 
-  return entity;
+  return result;
 };
