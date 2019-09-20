@@ -1,8 +1,15 @@
-import { Controller, Get, Post, Request, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Request,
+  UseGuards,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '../auth/auth.service';
 import { UsersService } from '../users/users.service';
-import { User } from '../users/decorator';
+import { CreateUserDto } from '../users/users.dto';
 
 @Controller()
 export class AppController {
@@ -16,36 +23,23 @@ export class AppController {
     return 'Hello World!';
   }
 
-  @UseGuards(AuthGuard('jwt'))
-  @Get('me')
-  getCurrentUser(@User() user): any {
-    return user;
-  }
-
   @UseGuards(AuthGuard('local'))
   @Post('login')
-  async login(@Request() req): Promise<any> {
+  async login(@Request() req) {
     return this.authService.login(req.user);
   }
 
-  @Get('create')
-  async createUser(): Promise<any> {
-    const fakeData = {
-      email: 'hello@world.com',
-      name: 'Rocky Balboa',
-      password: 'pass123',
-      birthDate: '1990-01-01',
-    };
-
+  @Post('register')
+  async createUser(@Body() userData: CreateUserDto) {
     try {
-      return await this.usersService.create(fakeData);
+      return await this.usersService.create(userData);
     } catch {
       return 'Email is already in use!';
     }
   }
 
   @Get('users')
-  async getUsers(): Promise<any> {
+  async getUsers() {
     return await this.usersService.findAll();
   }
 }
