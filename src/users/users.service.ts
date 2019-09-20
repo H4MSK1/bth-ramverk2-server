@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
 import { createHashFromString, omit } from '../utils';
+import { CreateUserDto } from './users.dto';
 
 @Injectable()
 export class UsersService {
@@ -17,7 +18,7 @@ export class UsersService {
   }
 
   async findByID(id: any): Promise<User> {
-    const result: User = await this.repository.findOne({ where: { id } });
+    const result: User = await this.repository.findOne(id);
     return omit(result, 'password');
   }
 
@@ -30,15 +31,14 @@ export class UsersService {
     return await this.repository.findOne({ where: { email } });
   }
 
-  async create(params): Promise<any> {
-    const { name, email, password, birthDate } = params;
-
+  async create(userData: CreateUserDto): Promise<User> {
     const user = new User();
-    user.name = name;
-    user.email = email;
-    user.password = await createHashFromString(password);
-    user.birthDate = birthDate;
+    user.name = userData.name;
+    user.email = userData.email;
+    user.password = await createHashFromString(userData.password);
+    user.birthDate = userData.birthDate;
 
-    return this.repository.save(user);
+    const savedUser = await this.repository.save(user);
+    return omit(savedUser, 'password');
   }
 }
