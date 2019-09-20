@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Report } from './reports.entity';
+import { CreateReportDto } from './reports.dto';
 
 @Injectable()
 export class ReportsService {
@@ -10,20 +11,19 @@ export class ReportsService {
     private readonly repository: Repository<Report>,
   ) {}
 
-  findAll(): Promise<Report[]> {
-    return this.repository.find();
+  async findAll(): Promise<Report[]> {
+    return await this.repository.find();
   }
 
-  findOne(week: number): Promise<any> {
-    return this.repository.findOne({ where: { week } });
+  async findOne(week: number): Promise<Report> {
+    return await this.repository.findOne({ where: { week } });
   }
 
-  create(params): Promise<Report> {
+  async create(params: CreateReportDto): Promise<Report> {
     const report = new Report();
-    report.authorId = params.authorId;
-    report.content = params.content;
     report.week = params.week;
+    report.body = params.body;
 
-    return this.repository.save(report);
+    return await this.repository.save(report);
   }
 }

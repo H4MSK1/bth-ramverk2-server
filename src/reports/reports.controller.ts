@@ -1,7 +1,7 @@
 import { Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ReportsService } from './reports.service';
-import { User } from '../users/decorator';
+import { CreateReportDto } from './reports.dto';
 
 @Controller('reports')
 export class ReportsController {
@@ -9,18 +9,17 @@ export class ReportsController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  async create(@User() user): Promise<any> {
-    const fakeData = {
-      authorId: user.id,
-      content: 'lmayo',
-      week: 1,
-    };
-
-    return await this.reportsService.create(fakeData);
+  async create(reportData: CreateReportDto) {
+    return await this.reportsService.create(reportData);
   }
 
   @Get()
-  async getReports(): Promise<any> {
+  async getReports() {
     return await this.reportsService.findAll();
+  }
+
+  @Get('/week/:id')
+  async getReportFromWeek(week: number) {
+    return await this.reportsService.findOne(week);
   }
 }
