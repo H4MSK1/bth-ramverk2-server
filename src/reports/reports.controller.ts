@@ -1,7 +1,15 @@
-import { Controller, Get, Post, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Delete,
+  Body,
+  UseGuards,
+  Param,
+} from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { ReportsService } from './reports.service';
-import { CreateReportDto } from './reports.dto';
+import { CreateReportDto, UpdateReportDto } from './reports.dto';
 
 @Controller('reports')
 export class ReportsController {
@@ -9,17 +17,29 @@ export class ReportsController {
 
   @UseGuards(AuthGuard('jwt'))
   @Post()
-  async create(reportData: CreateReportDto) {
+  async create(@Body() reportData: CreateReportDto) {
     return await this.reportsService.create(reportData);
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/update')
+  async update(@Body() reportData: UpdateReportDto) {
+    return await this.reportsService.update(reportData);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   async getReports() {
     return await this.reportsService.findAll();
   }
 
-  @Get('/week/:id')
-  async getReportFromWeek(week: number) {
+  @Get('/week/:week')
+  async getReportFromWeek(@Param('week') week: number) {
     return await this.reportsService.findOne(week);
+  }
+
+  @Delete('/week/:week')
+  async delete(@Param('week') week: number) {
+    return await this.reportsService.delete(week);
   }
 }
