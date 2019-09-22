@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
 import { ReportsModule } from '../reports/reports.module';
+import { TransformInterceptor } from './transform.interceptor';
 
 const DatabaseModule = TypeOrmModule.forRoot({
   type: 'sqlite',
@@ -14,7 +16,12 @@ const DatabaseModule = TypeOrmModule.forRoot({
 
 @Module({
   controllers: [AppController],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: TransformInterceptor,
+    },
+  ],
   imports: [DatabaseModule, AuthModule, UsersModule, ReportsModule],
 })
 export class AppModule {}
