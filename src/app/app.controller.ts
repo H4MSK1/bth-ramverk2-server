@@ -20,7 +20,10 @@ export class AppController {
 
   @Get()
   root(): string {
-    return 'Hello World!';
+    return `
+      Hej! Mitt namn är Mohammad Alburhan.
+      Född i Hudiksvall, Hälsingland men uppvuxen i Kristianstad, Skåne.
+    `;
   }
 
   @UseGuards(AuthGuard('local'))
