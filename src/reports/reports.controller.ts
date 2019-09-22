@@ -2,6 +2,7 @@ import {
   Controller,
   Get,
   Post,
+  Put,
   Delete,
   Body,
   UseGuards,
@@ -15,19 +16,6 @@ import { CreateReportDto, UpdateReportDto } from './reports.dto';
 export class ReportsController {
   constructor(private readonly reportsService: ReportsService) {}
 
-  @UseGuards(AuthGuard('jwt'))
-  @Post()
-  async create(@Body() reportData: CreateReportDto) {
-    return await this.reportsService.create(reportData);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
-  @Post('/update')
-  async update(@Body() reportData: UpdateReportDto) {
-    return await this.reportsService.update(reportData);
-  }
-
-  @UseGuards(AuthGuard('jwt'))
   @Get()
   async getReports() {
     return await this.reportsService.findAll();
@@ -38,6 +26,19 @@ export class ReportsController {
     return await this.reportsService.findOne(week);
   }
 
+  @UseGuards(AuthGuard('jwt'))
+  @Post()
+  async create(@Body() reportData: CreateReportDto) {
+    return await this.reportsService.create(reportData);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Put()
+  async update(@Body() reportData: UpdateReportDto) {
+    return await this.reportsService.update(reportData);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
   @Delete('/week/:week')
   async delete(@Param('week') week: number) {
     return await this.reportsService.delete(week);
