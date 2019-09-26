@@ -6,19 +6,18 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { CreateReportDto, UpdateReportDto } from './reports.dto';
 
 describe('ReportsService', () => {
-  let service: ReportsService;
   let repository: Repository<Report>;
+  let service: ReportsService;
+  let module: TestingModule;
 
-  function getMockedEntity(): Report {
-    return {
-      id: 1,
-      week: 3,
-      body: 'this is a mocked entity!',
-    };
-  }
+  const getMockedReport = (): Report => ({
+    id: 1,
+    week: 3,
+    body: 'this is a mocked entity!',
+  });
 
   beforeAll(async () => {
-    const module: TestingModule = await Test.createTestingModule({
+    module = await Test.createTestingModule({
       providers: [
         ReportsService,
         {
@@ -29,6 +28,9 @@ describe('ReportsService', () => {
     }).compile();
 
     service = module.get<ReportsService>(ReportsService);
+  });
+
+  beforeEach(() => {
     repository = module.get<Repository<Report>>(getRepositoryToken(Report));
   });
 
@@ -37,21 +39,21 @@ describe('ReportsService', () => {
   });
 
   it('should return array of entities for findAll', async () => {
-    const testReport: Report = getMockedEntity();
+    const testReport: Report = getMockedReport();
 
     jest.spyOn(repository, 'find').mockResolvedValueOnce([testReport]);
     expect(await service.findAll()).toEqual([testReport]);
   });
 
   it('should return entity for findOne', async () => {
-    const testReport: Report = getMockedEntity();
+    const testReport: Report = getMockedReport();
 
     jest.spyOn(repository, 'findOne').mockResolvedValueOnce(testReport);
     expect(await service.findOne(testReport.week)).toEqual(testReport);
   });
 
   it('should return newly created entity', async () => {
-    const testReport: Report = getMockedEntity();
+    const testReport: Report = getMockedReport();
     const dto = new CreateReportDto();
     dto.body = 'this is body';
     dto.week = 1;
@@ -61,12 +63,12 @@ describe('ReportsService', () => {
   });
 
   it('should update entity and return the new values', async () => {
-    const testReport: Report = getMockedEntity();
+    const testReport: Report = getMockedReport();
     const dto = new UpdateReportDto();
     dto.week = testReport.week;
     dto.body = 'something new';
 
-    const testReportUpdated = { ...getMockedEntity(), ...dto };
+    const testReportUpdated = { ...getMockedReport(), ...dto };
     jest.spyOn(repository, 'findOne').mockResolvedValueOnce(testReportUpdated);
     jest.spyOn(repository, 'save').mockResolvedValueOnce(testReportUpdated);
 
@@ -76,7 +78,7 @@ describe('ReportsService', () => {
   });
 
   it('should delete entity and return the object', async () => {
-    const testReport: Report = getMockedEntity();
+    const testReport: Report = getMockedReport();
 
     jest.spyOn(repository, 'findOne').mockResolvedValueOnce(testReport);
     jest.spyOn(repository, 'remove').mockResolvedValueOnce(testReport);
