@@ -1,11 +1,12 @@
 <p align="center">
   <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
 </p>
+
+## Badges
+[![Build Status](https://travis-ci.org/H4MSK1/bth-ramverk2-server.svg?branch=master)](https://travis-ci.org/H4MSK1/bth-ramverk2-server) [![Build Status](https://scrutinizer-ci.com/g/H4MSK1/bth-ramverk2-server/badges/build.png?b=master)](https://scrutinizer-ci.com/g/H4MSK1/bth-ramverk2-server/build-status/master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/H4MSK1/bth-ramverk2-server/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/H4MSK1/bth-ramverk2-server/?branch=master) [![Code Coverage](https://scrutinizer-ci.com/g/H4MSK1/bth-ramverk2-server/badges/coverage.png?b=master)](https://scrutinizer-ci.com/g/H4MSK1/bth-ramverk2-server/?branch=master)
+
   
   <p align="center">A progressive <a href="http://nodejs.org" target="blank">Node.js</a> framework for building efficient and scalable server-side applications, heavily inspired by <a href="https://angular.io" target="blank">Angular</a>.</p>
-
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
 
 ## Description
 
@@ -55,4 +56,4 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 
 ## License
 
-Nest is [MIT licensed](LICENSE).
+  Nest is [MIT licensed](LICENSE).
