@@ -1,6 +1,6 @@
 export class CreateReportDto {
-  readonly body: string;
-  readonly week: number;
+  body: string;
+  week: number;
 }
 
 export class UpdateReportDto extends CreateReportDto {}
