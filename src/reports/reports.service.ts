@@ -16,7 +16,7 @@ export class ReportsService {
   }
 
   async findOne(week: number): Promise<Report> {
-    return await this.repository.findOneOrFail({ where: { week } });
+    return await this.repository.findOne({ where: { week } });
   }
 
   async create(params: CreateReportDto): Promise<Report> {
