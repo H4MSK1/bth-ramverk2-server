@@ -78,15 +78,4 @@ describe('AppController', () => {
       );
     });
   });
-
-  describe('getUsers', () => {
-    it('should return array of users', async () => {
-      const testUser = await getMockedUserWithoutPassword();
-
-      jest.spyOn(usersService, 'findAll').mockResolvedValueOnce([testUser]);
-
-      const result = await controller.getUsers();
-      expect(result).toEqual([testUser]);
-    });
-  });
 });

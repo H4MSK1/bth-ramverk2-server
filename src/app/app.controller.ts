@@ -40,9 +40,4 @@ export class AppController {
       return 'Email is already in use!';
     }
   }
-
-  @Get('users')
-  async getUsers() {
-    return await this.usersService.findAll();
-  }
 }
