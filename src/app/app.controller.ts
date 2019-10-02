@@ -18,6 +18,11 @@ export class AppController {
     private readonly usersService: UsersService,
   ) {}
 
+  @Get('/lmao')
+  lmao(): string {
+    return 'lmao';
+  }
+
   @Get()
   root(): string {
     return `
