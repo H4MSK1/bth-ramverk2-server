@@ -10,6 +10,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { AuthService } from '../auth/auth.service';
 import { UsersService } from '../users/users.service';
 import { CreateUserDto } from '../users/users.dto';
+import { UnauthorizedException } from '@nestjs/common';
 
 @Controller()
 export class AppController {
@@ -39,5 +40,15 @@ export class AppController {
     } catch {
       return 'Email is already in use!';
     }
+  }
+
+  @Post('verifyToken')
+  async verify(@Body('token') token: string) {
+    const user = await this.authService.verifyToken(token);
+    if (!user) {
+      throw new UnauthorizedException();
+    }
+
+    return user;
   }
 }
