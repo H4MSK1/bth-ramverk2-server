@@ -16,10 +16,7 @@ const composeMessageObj = (message: any, user: any): object => ({
   user: composeUserObj(user),
 });
 
-@WebSocketGateway({
-  origins: 'https://jsramverk.alburhan.se',
-  serveClient: true,
-})
+@WebSocketGateway()
 export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer() server: any;
   usersCount: number = 0;
