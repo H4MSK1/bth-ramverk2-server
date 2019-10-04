@@ -4,16 +4,16 @@ import {
   SubscribeMessage,
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
-import { IMessage } from './interfaces';
+import { IMessage, IUser } from './interfaces';
 import { SocketEvents } from './enums';
 
 const composeMessageSchema = (
   message: string,
-  nickname: string,
+  user: IUser,
   isStatusMessage = false,
 ): IMessage => ({
   message,
-  nickname,
+  user,
   isStatusMessage,
   timestamp: Date.now(),
 });
@@ -23,39 +23,24 @@ export class ChatGateway implements OnGatewayDisconnect {
   @WebSocketServer() server: any;
   messagesCache: Array<IMessage> = [];
 
-  async handleDisconnect(socket) {
-    const { nickname } = socket;
-    if (!nickname) {
-      return;
-    }
-
-    const message = composeMessageSchema(
-      `${nickname} has left the chat`,
-      nickname,
-      true,
-    );
-
+  async handleNewMessage(message: IMessage) {
     this.messagesCache.push(message);
     this.server.emit(SocketEvents.NEW_MESSAGE, message);
   }
 
-  async handleNewMessage(client: any, message: IMessage) {
-    this.messagesCache.push(message);
-    client.broadcast.emit(SocketEvents.NEW_MESSAGE, message);
-  }
+  async handleDisconnect(socket) {
+    const user: IUser = socket.userMetadata;
+    if (!user) {
+      return;
+    }
 
-  @SubscribeMessage(SocketEvents.JOIN)
-  async onJoin(client: any, data: any) {
-    const { nickname } = data;
     const message = composeMessageSchema(
-      `${nickname} has joined the chat`,
-      nickname,
+      `${user.nickname} has left the chat`,
+      user,
       true,
     );
 
-    client.nickname = nickname;
-    this.messagesCache.push(message);
-    client.broadcast.emit(SocketEvents.NEW_MESSAGE, message);
+    this.handleNewMessage(message);
   }
 
   @SubscribeMessage(SocketEvents.CHAT_HISTORY)
@@ -63,14 +48,31 @@ export class ChatGateway implements OnGatewayDisconnect {
     client.emit(SocketEvents.CHAT_HISTORY, this.messagesCache);
   }
 
+  @SubscribeMessage(SocketEvents.JOIN)
+  async onJoin(client: any, data: IUser) {
+    const message = composeMessageSchema(
+      `${data.nickname} has joined the chat`,
+      data,
+      true,
+    );
+
+    client.userMetadata = data;
+    this.handleNewMessage(message);
+  }
+
   @SubscribeMessage(SocketEvents.NEW_MESSAGE)
   async onChat(client: any, data: any) {
-    if (!data.nickname || !data.nickname.trim().length) {
+    const { message = '' } = data;
+    if (!message.trim().length) {
       return;
     }
 
-    const message = composeMessageSchema(data.message, data.nickname);
-    this.messagesCache.push(message);
-    client.broadcast.emit(SocketEvents.NEW_MESSAGE, message);
+    if (message === '!truncate') {
+      this.messagesCache = [];
+      this.server.emit(SocketEvents.CHAT_HISTORY, this.messagesCache);
+      return;
+    }
+
+    this.handleNewMessage(composeMessageSchema(message, client.userMetadata));
   }
 }

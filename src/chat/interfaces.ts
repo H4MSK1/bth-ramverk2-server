@@ -1,6 +1,11 @@
 export interface IMessage {
   message: string;
   timestamp: number;
-  nickname: string;
+  user: IUser;
   isStatusMessage: boolean;
+}
+
+export interface IUser {
+  userId?: string;
+  nickname: string;
 }
