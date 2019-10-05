@@ -9,10 +9,13 @@ import { TransformInterceptor } from './transform.interceptor';
 import { ChatModule } from '../chat/chat.module';
 
 const DatabaseModule = TypeOrmModule.forRoot({
-  type: 'sqlite',
-  database: 'storage/database/db.sqlite',
+  type: 'mongodb',
+  database: 'jsramverk',
   entities: [`${__dirname}/../**/**.entity{.ts,.js}`],
   synchronize: true,
+  logging: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
 @Module({
