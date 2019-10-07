@@ -6,12 +6,16 @@ import { AuthModule } from '../auth/auth.module';
 import { UsersModule } from '../users/users.module';
 import { ReportsModule } from '../reports/reports.module';
 import { TransformInterceptor } from './transform.interceptor';
+import { ChatModule } from '../chat/chat.module';
 
 const DatabaseModule = TypeOrmModule.forRoot({
-  type: 'sqlite',
-  database: 'storage/database/db.sqlite',
+  type: 'mongodb',
+  database: 'jsramverk',
   entities: [`${__dirname}/../**/**.entity{.ts,.js}`],
   synchronize: true,
+  logging: true,
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
 });
 
 @Module({
@@ -22,6 +26,6 @@ const DatabaseModule = TypeOrmModule.forRoot({
       useClass: TransformInterceptor,
     },
   ],
-  imports: [DatabaseModule, AuthModule, UsersModule, ReportsModule],
+  imports: [DatabaseModule, AuthModule, UsersModule, ReportsModule, ChatModule],
 })
 export class AppModule {}

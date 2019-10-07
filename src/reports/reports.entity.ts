@@ -1,14 +1,14 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique } from 'typeorm';
+import { Entity, ObjectIdColumn, ObjectID, Column, Unique } from 'typeorm';
 
 @Entity()
 @Unique(['week'])
 export class Report {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @ObjectIdColumn()
+  id: ObjectID;
 
-  @Column({ type: 'text' })
+  @Column()
   body: string;
 
-  @Column({ type: 'numeric' })
+  @Column()
   week: number;
 }

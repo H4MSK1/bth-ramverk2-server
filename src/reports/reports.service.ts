@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MongoRepository } from 'typeorm';
 import { Report } from './reports.entity';
 import { CreateReportDto, UpdateReportDto } from './reports.dto';
 
@@ -8,7 +8,7 @@ import { CreateReportDto, UpdateReportDto } from './reports.dto';
 export class ReportsService {
   constructor(
     @InjectRepository(Report)
-    private readonly repository: Repository<Report>,
+    private readonly repository: MongoRepository<Report>,
   ) {}
 
   async findAll(): Promise<Report[]> {
@@ -16,12 +16,12 @@ export class ReportsService {
   }
 
   async findOne(week: number): Promise<Report> {
-    return await this.repository.findOne({ where: { week } });
+    return await this.repository.findOne({ where: { week: Number(week) } });
   }
 
   async create(params: CreateReportDto): Promise<Report> {
     const report = new Report();
-    report.week = params.week;
+    report.week = Number(params.week);
     report.body = params.body;
 
     return await this.repository.save(report);

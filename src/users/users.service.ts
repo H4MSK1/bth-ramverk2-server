@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MongoRepository } from 'typeorm';
 import { User } from './users.entity';
 import { createHashFromString, omit } from '../utils';
 import { CreateUserDto } from './users.dto';
@@ -9,7 +9,7 @@ import { CreateUserDto } from './users.dto';
 export class UsersService {
   constructor(
     @InjectRepository(User)
-    private readonly repository: Repository<User>,
+    private readonly repository: MongoRepository<User>,
   ) {}
 
   async findAll(): Promise<User[]> {
