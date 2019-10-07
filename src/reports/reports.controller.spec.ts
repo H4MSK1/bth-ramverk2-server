@@ -11,7 +11,7 @@ describe('Reports Controller', () => {
   let module: TestingModule;
 
   const testReport = {
-    id: 1,
+    id: '1a',
     week: 3,
     body: 'this is a mocked entity!',
   };
@@ -61,7 +61,7 @@ describe('Reports Controller', () => {
 
     jest
       .spyOn(service, 'create')
-      .mockResolvedValue({ id: 1, body: 'hello', week: 1 });
+      .mockResolvedValue({ id: '1a', body: 'hello', week: 1 });
 
     const result = await controller.create(dto);
     expect(result.body).toEqual(dto.body);

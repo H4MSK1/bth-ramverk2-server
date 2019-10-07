@@ -1,10 +1,10 @@
-import { Entity, ObjectIdColumn, ObjectID, Column, Unique } from 'typeorm';
+import { Entity, ObjectIdColumn, Column, Unique } from 'typeorm';
 
 @Entity()
 @Unique(['week'])
 export class Report {
   @ObjectIdColumn()
-  id: ObjectID;
+  id: string;
 
   @Column()
   body: string;

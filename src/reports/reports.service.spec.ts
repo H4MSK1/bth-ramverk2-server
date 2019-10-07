@@ -11,7 +11,7 @@ describe('ReportsService', () => {
   let module: TestingModule;
 
   const getMockedReport = (): Report => ({
-    id: 1,
+    id: '1a',
     week: 3,
     body: 'this is a mocked entity!',
   });
